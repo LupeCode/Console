@@ -1,0 +1,26 @@
+{
+  "name": "lupecode/console",
+  "description": "A library for printing to the console.",
+  "version": "0.1.0",
+  "type": "library",
+  "license": "GPL-3.0-or-later",
+  "authors":[
+    {
+      "name": "Joshua Lopez",
+      "email": "joshua@lupecode.com",
+      "homepage": "http://github.com/jb-lopez",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=7.0.0"
+  },
+  "require-dev": {
+  },
+  "autoload": {
+    "psr-4": {
+      "LupeCode\\Console\\": "source/",
+      "LupeCode\\ConsoleTest\\": "tests/"
+    }
+  }
+}
