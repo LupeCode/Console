@@ -7,30 +7,38 @@ use LupeCode\Console\Helpers\Color16;
 use LupeCode\Console\Helpers\Generator;
 use LupeCode\Console\Helpers\ProgressBar;
 
+/**
+ * Class Console
+ *
+ * @package LupeCode\Console
+ */
 class Console
 {
 
     public static    $debugMode = false;
     protected static $errorCount;
     /** @var ProgressBar */
-    protected static $progressBar = null;
+    protected static $progressBar;
     /** @var Generator */
-    protected static $generator = null;
+    protected static $generator;
 
     protected static function ensureProgressBar()
     {
-        if (is_null(static::$progressBar)) {
+        if (static::$progressBar === null) {
             static::$progressBar = new ProgressBar();
         }
     }
 
     protected static function ensureGenerator()
     {
-        if (is_null(static::$generator)) {
+        if (static::$generator === null) {
             static::$generator = new Generator();
         }
     }
 
+    /**
+     * @return \LupeCode\Console\Helpers\ProgressBar
+     */
     public static function progressBar()
     {
         static::ensureProgressBar();
@@ -55,7 +63,7 @@ class Console
      */
     public static function printLine(string $message, Color $color = null, bool $lineBreak = true)
     {
-        if (is_null($color)) {
+        if ($color === null) {
             static::print($message, $lineBreak);
         } else {
             static::printColor($message, $color, $lineBreak);
@@ -68,17 +76,17 @@ class Console
      */
     public static function print(string $message, bool $lineBreak = false)
     {
-        if (!is_null(static::$progressBar) && static::$progressBar->isShowing()) {
+        if (static::$progressBar !== null && static::$progressBar->isShowing()) {
             static::$progressBar->clear();
         }
         if (static::$debugMode) {
-            echo "Debug Print:\n\t" . str_replace("\e", "^", $message) . PHP_EOL;
+            echo "Debug Print:\n\t" . str_replace("\e", '^', $message) . PHP_EOL;
         }
         echo $message;
         if ($lineBreak) {
             echo PHP_EOL;
         }
-        if (!is_null(static::$progressBar) && static::$progressBar->isShowing()) {
+        if (static::$progressBar !== null && static::$progressBar->isShowing()) {
             static::$progressBar->update();
         }
     }
@@ -90,14 +98,55 @@ class Console
      */
     public static function printColor(string $message, Color $color, bool $lineBreak = true)
     {
-        if (!is_null(static::$progressBar) && static::$progressBar->isShowing()) {
+        if (static::$progressBar !== null && static::$progressBar->isShowing()) {
             static::$progressBar->clear();
         }
         static::ensureGenerator();
         static::print(static::$generator->genColor($message, $color), $lineBreak);
-        if (!is_null(static::$progressBar) && static::$progressBar->isShowing()) {
+        if (static::$progressBar !== null && static::$progressBar->isShowing()) {
             static::$progressBar->update();
         }
+    }
+
+    /**
+     * @param string $prompt
+     *
+     * @return string
+     */
+    public static function readline(string $prompt = "\n> ")
+    {
+        echo $prompt;
+
+        return trim(\readline());
+    }
+
+    /**
+     * @param string $message
+     * @param string $prompt
+     * @param bool   $lineBreak
+     *
+     * @return string
+     */
+    public static function promptReadline(string $message, string $prompt = "\n> ", bool $lineBreak = true)
+    {
+        static::print($message, $lineBreak);
+
+        return static::readline($prompt);
+    }
+
+    /**
+     * @param string $message
+     * @param Color  $color
+     * @param string $prompt
+     * @param bool   $lineBreak
+     *
+     * @return string
+     */
+    public static function promptColorReadlline(string $message, Color $color, string $prompt = "\n> ", bool $lineBreak = true)
+    {
+        static::printColor($message, $color, $lineBreak);
+
+        return static::readline($prompt);
     }
 
     /**
@@ -105,7 +154,7 @@ class Console
      */
     public static function printSuccess(string $message)
     {
-        static::printLine($message, (new Color16())->setForegroundColor(Color::GREEN), true);
+        static::printLine($message, (new Color16())->setForegroundColor(Color::GREEN));
     }
 
     /**
@@ -115,7 +164,7 @@ class Console
     public static function printError(string $message, bool $force = false)
     {
         if (static::$errorCount < 5 || $force) {
-            static::printLine($message, (new Color16())->setForegroundColor(Color::RED), true);
+            static::printLine($message, (new Color16())->setForegroundColor(Color::RED));
         }
     }
 
@@ -124,7 +173,7 @@ class Console
      */
     public static function printDebug(string $message)
     {
-        static::printLine($message, (new Color16())->setForegroundColor(Color::BLACK, true), true);
+        static::printLine($message, (new Color16())->setForegroundColor(Color::BLACK, true));
     }
 
     /**
@@ -132,9 +181,9 @@ class Console
      */
     public static function printHeader(string $message)
     {
-        $bar     = str_pad("", strlen($message) + 4, "=");
+        $bar     = str_pad('', \strlen($message) + 4, '=');
         $message = "$bar\n| $message |\n$bar";
-        static::printLine($message, (new Color16())->setForegroundColor(Color::YELLOW), true);
+        static::printLine($message, (new Color16())->setForegroundColor(Color::YELLOW));
     }
 
     /**
@@ -184,27 +233,27 @@ class Console
             static::printDebug(implode(PHP_EOL, $debug_messages));
         }
 
-        static::printLine("STACK TRACE", (new Color16())->setForegroundColor(Color::YELLOW));
-        if (is_null($backtrace)) {
+        static::printLine('STACK TRACE', (new Color16())->setForegroundColor(Color::YELLOW));
+        if ($backtrace === null) {
             $backtrace = debug_backtrace();
         }
         foreach ($backtrace as $index => $trace) {
-            if (empty($trace["class"])) {
-                $trace["class"] = "";
+            if (empty($trace['class'])) {
+                $trace['class'] = '';
             }
-            if (empty($trace["type"])) {
-                $trace["type"] = "";
+            if (empty($trace['type'])) {
+                $trace['type'] = '';
             }
-            if (empty($trace["function"])) {
-                $trace["function"] = "";
+            if (empty($trace['function'])) {
+                $trace['function'] = '';
             }
-            if (empty($trace["args"])) {
-                $trace["args"] = [];
+            if (empty($trace['args'])) {
+                $trace['args'] = [];
             }
-            static::printLine("#{$index} => {$trace["file"]}:{$trace["line"]}", (new Color16())->setForegroundColor(Color::RED, true)->setBackgroundColor(Color::BLUE), true);
-            static::printLine("\t#{$trace["class"]}{$trace["type"]}{$trace["function"]}", (new Color16())->setForegroundColor(Color::YELLOW, true), true);
-            foreach ($trace["args"] as $arg) {
-                static::printLine("\t\t" . var_export($arg, true), true);
+            static::printLine("#{$index} => {$trace['file']}:{$trace['line']}", (new Color16())->setForegroundColor(Color::RED, true)->setBackgroundColor(Color::BLUE));
+            static::printLine("\t#{$trace['class']}{$trace['type']}{$trace['function']}", (new Color16())->setForegroundColor(Color::YELLOW, true));
+            foreach ($trace['args'] as $arg) {
+                static::printLine("\t\t" . var_export($arg, true));
             }
 
         }
