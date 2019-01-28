@@ -136,6 +136,28 @@ class Console
 
     /**
      * @param string $message
+     * @param array  $options
+     * @param string $prompt
+     * @param bool   $returnValue
+     *
+     * @return mixed|string
+     */
+    public static function optionsReadline(string $message, array $options, string $prompt = "\n> ", bool $returnValue = false)
+    {
+        $choice = '';
+        while (!\array_key_exists($choice, $options)) {
+            static::print($message, true);
+            foreach ($options as $index => $value) {
+                static::print(str_pad('[' . $index . ']', 7, ' ', STR_PAD_LEFT) . ' ' . $value, true);
+            }
+            $choice = static::readline($prompt);
+        }
+
+        return $returnValue ? $options[$choice] : $choice;
+    }
+
+    /**
+     * @param string $message
      * @param Color  $color
      * @param string $prompt
      * @param bool   $lineBreak
