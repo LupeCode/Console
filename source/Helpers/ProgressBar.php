@@ -15,6 +15,7 @@ class ProgressBar
     protected $rainbow256Mode = false;
     protected $generator;
     protected $showing        = false;
+    protected $text           = '';
 
     public function reset()
     {
@@ -25,6 +26,7 @@ class ProgressBar
         $this->rainbow256Mode = false;
         $this->current        = 0;
         $this->total          = 0;
+        $this->text='';
 
         return $this->startTimer();
     }
@@ -88,6 +90,13 @@ class ProgressBar
         return $this;
     }
 
+    public function setText(string $text)
+    {
+        $this->text = $text;
+
+        return $this;
+    }
+
     public function isShowing()
     {
         return $this->showing;
@@ -128,11 +137,11 @@ class ProgressBar
     {
         $percent = (double)($this->current / $this->total);
         $bar     = floor($percent * $this->barSize);
-        $theBar  = str_repeat("=", $bar);
+        $theBar  = str_repeat('=', $bar);
         if ($bar < $this->barSize) {
-            $theBar .= ">";
+            $theBar .= '>';
         } else {
-            $theBar .= "=";
+            $theBar .= '=';
         }
         if ($this->rainbowMode) {
             if ($this->rainbow256Mode) {
@@ -144,7 +153,7 @@ class ProgressBar
             $theBar = (new Color256())->setBackgroundColor($this->barBackColor)->setForegroundColor($this->barForeColor)->getEscapeSequence() . $theBar . "\e[0m";
         }
         $this->clear();
-        echo "[" . $theBar . str_repeat(" ", $this->barSize - $bar) . "]";
+        echo '[' . $theBar . str_repeat(' ', $this->barSize - $bar) . ']';
         $this->showing = true;
 
         return $this;
@@ -155,7 +164,7 @@ class ProgressBar
         $now        = time();
         $percent    = (double)($this->current / $this->total);
         $display    = number_format($percent * 100, 0);
-        $statusText = " $display%  " . $this->current . "/" . $this->total;
+        $statusText = " $display%  " . $this->current . '/' . $this->total;
         if ($this->current > 0) {
             $rate = ($now - $this->timeStart) / $this->current;
         } else {
@@ -164,7 +173,7 @@ class ProgressBar
         $left       = $this->total - $this->current;
         $eta        = round($rate * $left, 2);
         $elapsed    = $now - $this->timeStart;
-        $statusText .= " remaining: " . number_format($eta) . " sec.  elapsed: " . number_format($elapsed) . " sec.";
+        $statusText .= ' remaining: ' . number_format($eta) . ' sec.  elapsed: ' . number_format($elapsed) . ' sec.    ' . $this->text;
         echo $statusText;
 
         return $this;
@@ -177,7 +186,7 @@ class ProgressBar
         return $this;
     }
 
-    public function finish(string $message = "")
+    public function finish(string $message = '')
     {
         $this->showing = false;
         echo $message . PHP_EOL;
