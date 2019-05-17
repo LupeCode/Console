@@ -164,8 +164,7 @@ function progressBarTest()
     }
     $pBar->finish();
     Console::printStatus("Bar of size $size while printing text");
-    $pBar = Console::progressBar();
-    $pBar->setBarSize($size)->setTotal($limit)->startTimer();
+    $pBar->reset()->setBarSize($size)->setTotal($limit)->startTimer();
     for ($i = 0; $i < $limit; $i++) {
         if ($i % 20 === 0) {
             Console::printDebug('Woo, divisible by 20!');
@@ -174,5 +173,14 @@ function progressBarTest()
         usleep($sleep);
     }
     $pBar->finish();
-    echo PHP_EOL;
+    Console::printStatus("Bar of size $size with custom progress text");
+    $pBar->reset()->setBarSize($size)->setTotal($limit)->setProgressText(' $2 of $3 done')->startTimer();
+    for ($i = 0; $i < $limit; $i++) {
+        if ($i % 20 === 0) {
+            Console::printDebug('Woo, divisible by 20!');
+        }
+        $pBar->increment();
+        usleep($sleep);
+    }
+    $pBar->finish();
 }
