@@ -125,7 +125,7 @@ class ProgressBar
     public function clear()
     {
         if ($this->showing) {
-            echo "\r";
+            print("\e[G\e[K");
             $this->showing = false;
         }
         flush();
