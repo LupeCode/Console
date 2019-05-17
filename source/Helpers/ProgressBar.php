@@ -6,27 +6,27 @@ class ProgressBar
 {
 
     protected $timeStart;
-    protected $total          = 0;
-    protected $current        = 0;
-    protected $barSize        = 30;
-    protected $barForeColor   = Color::DEFAULT;
-    protected $barBackColor   = Color::DEFAULT;
-    protected $rainbowMode    = false;
-    protected $rainbow256Mode = false;
+    protected $total           = 0;
+    protected $current         = 0;
+    protected $barSize         = 30;
+    protected $barForeColor    = Color::DEFAULT;
+    protected $barBackColor    = Color::DEFAULT;
+    protected $rainbowMode     = false;
+    protected $rainbow256Mode  = false;
     protected $generator;
-    protected $showing        = false;
-    protected $text           = '';
+    protected $showing         = false;
+    protected $text            = '';
 
     public function reset()
     {
-        $this->barSize        = 30;
-        $this->barForeColor   = Color::DEFAULT;
-        $this->barBackColor   = Color::DEFAULT;
-        $this->rainbowMode    = false;
-        $this->rainbow256Mode = false;
-        $this->current        = 0;
-        $this->total          = 0;
-        $this->text='';
+        $this->barSize         = 30;
+        $this->barForeColor    = Color::DEFAULT;
+        $this->barBackColor    = Color::DEFAULT;
+        $this->rainbowMode     = false;
+        $this->rainbow256Mode  = false;
+        $this->current         = 0;
+        $this->total           = 0;
+        $this->text            = '';
 
         return $this->startTimer();
     }

@@ -23,7 +23,7 @@ class Generator
         $length   = strlen($message);
         $color    = new Color256();
         $iterator = 0;
-        $output   = "";
+        $output   = '';
         if (empty($flags)) {
             $flags = [Color::BOLD];
         }
@@ -66,7 +66,7 @@ class Generator
             }
         }
 
-        return "";
+        return '';
     }
 
     /**
@@ -78,10 +78,10 @@ class Generator
      */
     public function genRainbow(string $message, bool $useBackColors = false, array $flags = [])
     {
-        $foreColors = ["1", "3", "2", "6", "4", "5"];
-        $backColors = ["6", "4", "5", "1", "3", "2"];
+        $foreColors = ['1', '3', '2', '6', '4', '5'];
+        $backColors = ['6', '4', '5', '1', '3', '2'];
         $length     = strlen($message);
-        $output     = "";
+        $output     = '';
         if (empty($flags)) {
             $flags[] = Color::BOLD;
         }
