@@ -6,6 +6,7 @@ use LupeCode\Console\Helpers\Color;
 use LupeCode\Console\Helpers\Color16;
 use LupeCode\Console\Helpers\Generator;
 use LupeCode\Console\Helpers\ProgressBar;
+use LupeCode\Console\Helpers\Table;
 
 /**
  * Class Console
@@ -21,6 +22,8 @@ class Console
     protected static $progressBar;
     /** @var Generator */
     protected static $generator;
+    /** @var Table */
+    protected static $table;
 
     protected static function ensureProgressBar()
     {
@@ -36,6 +39,13 @@ class Console
         }
     }
 
+    protected static function ensureTable()
+    {
+        if(static::$table === null){
+            static::$table = new Table();
+        }
+    }
+
     /**
      * @return \LupeCode\Console\Helpers\ProgressBar
      */
@@ -44,6 +54,13 @@ class Console
         static::ensureProgressBar();
 
         return static::$progressBar;
+    }
+
+    public static function table()
+    {
+        static::ensureTable();
+
+        return static::$table;
     }
 
     /**
@@ -209,6 +226,8 @@ class Console
     }
 
     /**
+     * Prints a 16 color rainbow colored text
+     *
      * @param string $message
      * @param bool   $useBackColors
      * @param array  $flags
@@ -221,6 +240,8 @@ class Console
     }
 
     /**
+     * Prints a 256 color rainbow colored text
+     *
      * @param string $message
      * @param bool   $useBackColors
      * @param array  $flags
