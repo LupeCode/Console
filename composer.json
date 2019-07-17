@@ -17,6 +17,9 @@
   },
   "require-dev": {
   },
+  "suggest": {
+    "ext-readline": "*"
+  },
   "autoload": {
     "psr-4": {
       "LupeCode\\Console\\": "source/",
