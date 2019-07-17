@@ -16,6 +16,11 @@ class Table
     protected $headers = [];
     /** @var array int[] */
     protected $maxLengths = [];
+    /** @var int */
+    protected $totalTableWidth = 0;
+
+    const VERTICAL_BORDER_CHAR   = '|';
+    const HORIZONTAL_BORDER_CHAR = '-';
 
     protected function calculateColumnWidth(int $colNum)
     {
@@ -52,33 +57,50 @@ class Table
         return $this;
     }
 
-    public function printTable()
+    public function recalculateWidths()
     {
         for ($iteratorColumns = 0; $iteratorColumns < $this->numCols; $iteratorColumns++) {
             if (empty($this->maxLengths[$iteratorColumns])) {
                 $this->maxLengths[$iteratorColumns] = $this->calculateColumnWidth($iteratorColumns);
             }
         }
-        $totalTableWidth = array_sum($this->maxLengths) + count($this->maxLengths) * 3 + 1;
-        $vBorder = str_pad('', $totalTableWidth, '-') . PHP_EOL;
+        $this->totalTableWidth = array_sum($this->maxLengths) + count($this->maxLengths) * 3 + 1;
+
+        return $this;
+    }
+
+    public function printHorizontalBorder()
+    {
+        echo str_pad('', $this->totalTableWidth, static::HORIZONTAL_BORDER_CHAR) . PHP_EOL;
+
+        return $this;
+    }
+
+    public function printRow(array $row)
+    {
         $lBorder = '| ';
         $rBorder = ' |' . PHP_EOL;
         $mBorder = ' | ';
-        echo $vBorder;
-        $headOut = [];
+        $rowData = [];
         for ($iteratorColumns = 0; $iteratorColumns < $this->numCols; $iteratorColumns++) {
-            $headOut[] = substr(str_pad($this->headers[$iteratorColumns], $this->maxLengths[$iteratorColumns]), 0, $this->maxLengths[$iteratorColumns]);
+            $cellOut   = substr(str_pad($row[$iteratorColumns], $this->maxLengths[$iteratorColumns]), 0, $this->maxLengths[$iteratorColumns]);
+            $rowData[] = $cellOut;
         }
-        echo $lBorder . implode($mBorder, $headOut) . $rBorder;
-        echo $vBorder;
+        echo $lBorder . implode($mBorder, $rowData) . $rBorder;
+        $this->printHorizontalBorder();
+
+        return $this;
+    }
+
+    public function printTable()
+    {
+        $this
+            ->recalculateWidths()
+            ->printHorizontalBorder()
+            ->printRow($this->headers)
+        ;
         for ($iteratorRows = 0; $iteratorRows < $this->numRows; $iteratorRows++) {
-            $rowData = [];
-            for ($iteratorColumns = 0; $iteratorColumns < $this->numCols; $iteratorColumns++) {
-                $cellOut = substr(str_pad($this->tableData[$iteratorRows][$iteratorColumns], $this->maxLengths[$iteratorColumns]), 0, $this->maxLengths[$iteratorColumns]);
-                $rowData[] = $cellOut;
-            }
-            echo $lBorder . implode($mBorder, $rowData) . $rBorder;
-            echo $vBorder;
+            $this->printRow($this->tableData[$iteratorRows]);
         }
 
         return $this;
