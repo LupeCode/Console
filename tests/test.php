@@ -1,9 +1,6 @@
 <?php
 
 use LupeCode\Console\Console;
-use LupeCode\Console\Helpers\Color;
-use LupeCode\Console\Helpers\Color16;
-use LupeCode\Console\Helpers\Color256;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
