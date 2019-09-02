@@ -16,7 +16,7 @@ class ProgressBar
     protected $generator;
     protected $showing        = false;
     protected $text           = '';
-    protected $templateText   = ' $1% $2/$3 remaining: $4 sec. elapsed: $5 sec.    $6';
+    protected $templateText   = ' $1% $2/$3 remaining: $4 sec. elapsed: $5 sec. $7 per sec.    $6';
 
     /**
      * @return $this
@@ -31,7 +31,7 @@ class ProgressBar
         $this->current        = 0;
         $this->total          = 0;
         $this->text           = '';
-        $this->templateText   = ' $1% $2/$3 remaining: $4 sec. elapsed: $5 sec.    $6';
+        $this->templateText   = ' $1% $2/$3 remaining: $4 sec. elapsed: $5 sec. $7 per sec.    $6';
 
         return $this->startTimer();
     }
@@ -135,9 +135,14 @@ class ProgressBar
 
     /**
      * @param string $text
-     * The default text is ' $1% $2/$3 remaining: $4 sec. elapsed: $5 sec.    $6'
-     * $1 is the percent; $2 is the current progress; $3 is the total;
-     * $4 is the estimated time remaining; $5 is the elapsed time; $6 is the post-text (set in setText())
+     * The default text is ' $1% $2/$3 remaining: $4 sec. elapsed: $5 sec. $7 per sec.    $6'
+     * $1 is the percent;
+     * $2 is the current progress;
+     * $3 is the total;
+     * $4 is the estimated time remaining;
+     * $5 is the elapsed time;
+     * $6 is the post-text (set in setText())
+     * $7 is the speed;
      *
      * @return $this
      */
@@ -263,13 +268,14 @@ class ProgressBar
         } else {
             $rate = 0;
         }
+        $speed = $rate / 1;
         $left    = $this->total - $this->current;
         $eta     = round($rate * $left, 2);
         $elapsed = $now - $this->timeStart;
 
         $statusText = str_replace(
-            ['$1', '$2', '$3', '$4', '$5', '$6'],
-            [$display, $this->current, $this->total, number_format($eta), number_format($elapsed), $this->text],
+            ['$1', '$2', '$3', '$4', '$5', '$6', '$7'],
+            [$display, $this->current, $this->total, number_format($eta), number_format($elapsed), $this->text, $speed],
             $this->templateText
         );
         echo $statusText;
