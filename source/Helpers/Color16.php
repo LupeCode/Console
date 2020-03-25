@@ -2,6 +2,8 @@
 
 namespace LupeCode\Console\Helpers;
 
+use LupeCode\Console\Helpers\Controls\ControlSequenceIntroducer as CSI;
+
 /**
  * Class Color16
  *
@@ -43,7 +45,7 @@ class Color16 implements Color
      */
     public function getEscapeSequence()
     {
-        return "\e[" . $this->getColorCode() . 'm';
+        return CSI::SGR($this->getColorCode());
     }
 
     /**

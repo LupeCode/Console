@@ -4,8 +4,13 @@ use LupeCode\Console\Console;
 use LupeCode\Console\Helpers\Color;
 use LupeCode\Console\Helpers\Color16;
 
-function basicTest($sleep)
+require_once __DIR__ . '/../vendor/autoload.php';
+
+basicTest();
+
+function basicTest()
 {
+    $sleep = 500000;
     Console::printHeader('Header Message');
     usleep($sleep);
     Console::printDebug('Debug Message');

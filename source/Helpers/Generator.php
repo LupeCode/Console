@@ -2,6 +2,8 @@
 
 namespace LupeCode\Console\Helpers;
 
+use LupeCode\Console\Helpers\Controls\ControlSequenceIntroducer as CSI;
+
 class Generator
 {
 
@@ -30,37 +32,37 @@ class Generator
         while (true) {
             for ($r = 5, $g = 0, $b = 0; $g < 6; $g++) {
                 if ($iterator >= $length) {
-                    return $output . "\e[0m";
+                    return $output . CSI::SGR();
                 }
                 $output .= $this->r256($color, $r, $g, $b, $useBackColors, $flags) . $message[$iterator++];
             }
             for ($r = 5, $g = 5, $b = 0; $r >= 0; $r--) {
                 if ($iterator >= $length) {
-                    return $output . "\e[0m";
+                    return $output . CSI::SGR();
                 }
                 $output .= $this->r256($color, $r, $g, $b, $useBackColors, $flags) . $message[$iterator++];
             }
             for ($r = 0, $g = 5, $b = 0; $b < 6; $b++) {
                 if ($iterator >= $length) {
-                    return $output . "\e[0m";
+                    return $output . CSI::SGR();
                 }
                 $output .= $this->r256($color, $r, $g, $b, $useBackColors, $flags) . $message[$iterator++];
             }
             for ($r = 0, $g = 5, $b = 5; $g >= 0; $g--) {
                 if ($iterator >= $length) {
-                    return $output . "\e[0m";
+                    return $output . CSI::SGR();
                 }
                 $output .= $this->r256($color, $r, $g, $b, $useBackColors, $flags) . $message[$iterator++];
             }
             for ($r = 0, $g = 0, $b = 5; $r < 6; $r++) {
                 if ($iterator >= $length) {
-                    return $output . "\e[0m";
+                    return $output . CSI::SGR();
                 }
                 $output .= $this->r256($color, $r, $g, $b, $useBackColors, $flags) . $message[$iterator++];
             }
             for ($r = 5, $g = 0, $b = 5; $b >= 0; $b--) {
                 if ($iterator >= $length) {
-                    return $output . "\e[0m";
+                    return $output . CSI::SGR();
                 }
                 $output .= $this->r256($color, $r, $g, $b, $useBackColors, $flags) . $message[$iterator++];
             }
@@ -96,7 +98,7 @@ class Generator
             }
             $output .= $color->getEscapeSequence() . $message[$iterator];
         }
-        $output .= "\e[0m";
+        $output .= CSI::SGR();
 
         return $output;
     }
@@ -109,6 +111,6 @@ class Generator
      */
     public function genColor(string $message, Color $color)
     {
-        return $color->getEscapeSequence() . $message . "\e[39;49;0m";
+        return $color->getEscapeSequence() . $message . CSI::SGR();
     }
 }

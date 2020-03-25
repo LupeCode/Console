@@ -4,32 +4,44 @@ namespace LupeCode\Console\Helpers;
 
 class ProgressBar
 {
-
+    /** @var int */
     protected $timeStart;
-    protected $total          = 0;
-    protected $current        = 0;
-    protected $barSize        = 30;
-    protected $barForeColor   = Color::DEFAULT;
-    protected $barBackColor   = Color::DEFAULT;
-    protected $rainbowMode    = false;
+    /** @var int */
+    protected $total = 0;
+    /** @var int */
+    protected $current = 0;
+    /** @var int */
+    protected $barSize = 30;
+    /** @var string */
+    protected $barForeColor = Color::DEFAULT;
+    /** @var string */
+    protected $barBackColor = Color::DEFAULT;
+    /** @var bool */
+    protected $rainbowMode = false;
+    /** @var bool */
     protected $rainbow256Mode = false;
+    /** @var \LupeCode\Console\Helpers\Generator */
     protected $generator;
-    protected $showing        = false;
-    protected $text           = '';
-    protected $templateText   = ' $1% $2/$3 remaining: $4 sec. elapsed: $5 sec. $7 per sec.    $6';
+    /** @var bool */
+    protected $showing = false;
+    /** @var string */
+    protected $text = '';
+    /** @var string */
+    protected $templateText = ' $1% $2/$3 remaining: $4 sec. elapsed: $5 sec. $7 per sec.    $6';
 
     /**
      * @return $this
      */
     public function reset()
     {
+        $this->current        = 0;
+        $this->total          = 0;
         $this->barSize        = 30;
         $this->barForeColor   = Color::DEFAULT;
         $this->barBackColor   = Color::DEFAULT;
         $this->rainbowMode    = false;
         $this->rainbow256Mode = false;
-        $this->current        = 0;
-        $this->total          = 0;
+        $this->showing        = false;
         $this->text           = '';
         $this->templateText   = ' $1% $2/$3 remaining: $4 sec. elapsed: $5 sec. $7 per sec.    $6';
 
@@ -80,9 +92,6 @@ class ProgressBar
     public function setRainbow256Mode(bool $rainbow256Mode)
     {
         $this->rainbow256Mode = $rainbow256Mode;
-        if ($this->rainbow256Mode) {
-            $this->rainbowMode = true;
-        }
 
         return $this;
     }
@@ -235,12 +244,10 @@ class ProgressBar
         } else {
             $theBar .= '=';
         }
-        if ($this->rainbowMode) {
-            if ($this->rainbow256Mode) {
-                $theBar = $this->generator->genRainbow256($theBar);
-            } else {
-                $theBar = $this->generator->genRainbow($theBar);
-            }
+        if ($this->rainbow256Mode) {
+            $theBar = $this->generator->genRainbow256($theBar);
+        } elseif ($this->rainbowMode) {
+            $theBar = $this->generator->genRainbow($theBar);
         } else {
             $theBar = (new Color256())->setBackgroundColor($this->barBackColor)->setForegroundColor($this->barForeColor)->getEscapeSequence() . $theBar . "\e[0m";
         }
@@ -256,7 +263,7 @@ class ProgressBar
      */
     public function printText()
     {
-        $now     = time();
+        $now = time();
         if ($this->total > 0) {
             $percent = (double)($this->current / $this->total);
         } else {
@@ -268,7 +275,7 @@ class ProgressBar
         } else {
             $rate = 0;
         }
-        $speed = $rate / 1;
+        $speed   = round($rate / 1, 2);
         $left    = $this->total - $this->current;
         $eta     = round($rate * $left, 2);
         $elapsed = $now - $this->timeStart;

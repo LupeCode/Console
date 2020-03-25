@@ -1,7 +1,7 @@
 {
   "name": "lupecode/console",
   "description": "A library for printing to the console.",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "type": "library",
   "license": "GPL-3.0-or-later",
   "authors":[
@@ -16,6 +16,7 @@
     "php": ">=7.0.0"
   },
   "require-dev": {
+    "phpmetrics/phpmetrics": "~2.5.0"
   },
   "suggest": {
     "ext-readline": "*"

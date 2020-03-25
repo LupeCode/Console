@@ -19,6 +19,7 @@ interface Color
     const GRAY    = '7';
     const DEFAULT = '9';
 
+    const RESET      = '0';
     const BOLD       = '1';
     const DIM        = '2';
     const ITALIC     = '3';

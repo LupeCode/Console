@@ -4,6 +4,8 @@ namespace LupeCode\Console;
 
 use LupeCode\Console\Helpers\Color;
 use LupeCode\Console\Helpers\Color16;
+use LupeCode\Console\Helpers\Color256;
+use LupeCode\Console\Helpers\Controls\ControlSequenceIntroducer as CSI;
 use LupeCode\Console\Helpers\Generator;
 use LupeCode\Console\Helpers\ProgressBar;
 use LupeCode\Console\Helpers\Table;
@@ -25,23 +27,32 @@ class Console
     /** @var Table */
     protected static $table;
 
-    protected static function ensureProgressBar()
+    /**
+     * @param bool $force
+     */
+    protected static function ensureProgressBar($force = false)
     {
-        if (static::$progressBar === null) {
+        if (static::$progressBar === null || $force) {
             static::$progressBar = new ProgressBar();
         }
     }
 
-    protected static function ensureGenerator()
+    /**
+     * @param bool $force
+     */
+    protected static function ensureGenerator($force = false)
     {
-        if (static::$generator === null) {
+        if (static::$generator === null || $force) {
             static::$generator = new Generator();
         }
     }
 
-    protected static function ensureTable()
+    /**
+     * @param bool $force
+     */
+    protected static function ensureTable($force = false)
     {
-        if(static::$table === null){
+        if(static::$table === null || $force){
             static::$table = new Table();
         }
     }
@@ -56,11 +67,29 @@ class Console
         return static::$progressBar;
     }
 
-    public static function table()
+    /**
+     * @param bool $reset
+     *
+     * @return \LupeCode\Console\Helpers\Table
+     */
+    public static function table($reset = false)
     {
-        static::ensureTable();
+        static::ensureTable($reset);
 
         return static::$table;
+    }
+
+    public static function activateAlternateScreenBuffer()
+    {
+        static::print(CSI::ALT_BUFF_ON());
+    }
+
+    /**
+     *
+     */
+    public static function deactivateAlternateScreenBuffer()
+    {
+        static::print(CSI::ALT_BUFF_OFF());
     }
 
     /**
@@ -134,7 +163,7 @@ class Console
     {
         echo $prompt;
 
-        return trim(\readline());
+        return \trim(\readline());
     }
 
     /**
