@@ -280,11 +280,17 @@ class ProgressBar
         $eta     = round($rate * $left, 2);
         $elapsed = $now - $this->timeStart;
 
-        $statusText = str_replace(
-            ['$1', '$2', '$3', '$4', '$5', '$6', '$7'],
-            [$display, $this->current, $this->total, number_format($eta), number_format($elapsed), $this->text, $speed],
-            $this->templateText
-        );
+        $replaceArray = [
+            '$1' => $display,
+            '$2' => $this->current,
+            '$3' => $this->total,
+            '$4' => sprintf('%02d:%02d:%02d', floor($eta / 3600), floor($eta / 60 % 60), floor($eta % 60)),
+            '$5' => sprintf('%02d:%02d:%02d', floor($elapsed / 3600), floor($elapsed / 60 % 60), floor($elapsed % 60)),
+            '$6' => $this->text,
+            '$7' => $speed,
+        ];
+
+        $statusText = str_replace(array_keys($replaceArray), $replaceArray, $this->templateText);
         echo $statusText;
 
         return $this;
