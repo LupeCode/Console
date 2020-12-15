@@ -8,6 +8,15 @@ If you have a console that is not Windows command prompt,
 and you can have color in your console,
 this library will help you jazz up your PHP console applications.
 
+## Requirements
+
+This library requires PHP >= 7.0.
+
+### Readline
+
+If you wish to use `Console::readline`, `Console::promptReadline`, or `Console::optionsReadline` you will need to have the readline module loaded in PHP.
+On Windows, this requires PHP >= 7.1.0
+
 ## Installation
 
 The best way to install this console helper is to use Composer.
