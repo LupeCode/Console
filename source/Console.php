@@ -18,96 +18,63 @@ use LupeCode\Console\Helpers\Table;
 class Console
 {
 
-    public static    $debugMode = false;
-    protected static $errorCount;
-    /** @var ProgressBar */
-    protected static $progressBar;
-    /** @var Generator */
-    protected static $generator;
-    /** @var Table */
-    protected static $table;
+    public static bool $debugMode = false;
+    protected static int $errorCount = 0;
+    protected static ProgressBar $progressBar;
+    protected static Generator $generator;
+    protected static Table $table;
 
-    /**
-     * @param bool $force
-     */
-    protected static function ensureProgressBar($force = false)
+    protected static function ensureProgressBar(bool $force = false): void
     {
-        if (static::$progressBar === null || $force) {
+        if (!isset(static::$progressBar) || $force) {
             static::$progressBar = new ProgressBar();
         }
     }
 
-    /**
-     * @param bool $force
-     */
-    protected static function ensureGenerator($force = false)
+    protected static function ensureGenerator(bool $force = false): void
     {
-        if (static::$generator === null || $force) {
+        if (!isset(static::$generator) || $force) {
             static::$generator = new Generator();
         }
     }
 
-    /**
-     * @param bool $force
-     */
-    protected static function ensureTable($force = false)
+    protected static function ensureTable(bool $force = false): void
     {
-        if(static::$table === null || $force){
+        if (!isset(static::$table) || $force) {
             static::$table = new Table();
         }
     }
 
-    /**
-     * @return \LupeCode\Console\Helpers\ProgressBar
-     */
-    public static function progressBar()
+    public static function progressBar(): ProgressBar
     {
         static::ensureProgressBar();
 
         return static::$progressBar;
     }
 
-    /**
-     * @param bool $reset
-     *
-     * @return \LupeCode\Console\Helpers\Table
-     */
-    public static function table($reset = false)
+    public static function table(bool $reset = false): Table
     {
         static::ensureTable($reset);
 
         return static::$table;
     }
 
-    public static function activateAlternateScreenBuffer()
+    public static function activateAlternateScreenBuffer(): void
     {
         static::print(CSI::ALT_BUFF_ON());
     }
 
-    /**
-     *
-     */
-    public static function deactivateAlternateScreenBuffer()
+    public static function deactivateAlternateScreenBuffer(): void
     {
         static::print(CSI::ALT_BUFF_OFF());
     }
 
-    /**
-     * @param string     $message
-     * @param Color|null $overrideColor
-     * @param bool       $lineBreak
-     */
-    public static function printStatus(string $message, Color $overrideColor = null, bool $lineBreak = true)
+    public static function printStatus(string $message, Color $overrideColor = null, bool $lineBreak = true): void
     {
         static::printLine($message, $overrideColor ?? (new Color16())->setForegroundColor(Color::CYAN), $lineBreak);
     }
 
-    /**
-     * @param string     $message
-     * @param Color|null $color
-     * @param bool       $lineBreak
-     */
-    public static function printLine(string $message, Color $color = null, bool $lineBreak = true)
+    public static function printLine(string $message, Color $color = null, bool $lineBreak = true): void
     {
         if ($color === null) {
             static::print($message, $lineBreak);
@@ -116,14 +83,10 @@ class Console
         }
     }
 
-    /**
-     * @param string $message
-     * @param bool   $lineBreak
-     */
-    public static function print(string $message, bool $lineBreak = false)
+    public static function print(string $message, bool $lineBreak = false): void
     {
-        if (static::$progressBar !== null && static::$progressBar->isShowing()) {
-            static::$progressBar->clear();
+        if (static::progressBar() !== null && static::progressBar()->isShowing()) {
+            static::progressBar()->clear();
         }
         if (static::$debugMode) {
             echo "Debug Print:\n\t" . str_replace("\e", '^', $message) . PHP_EOL;
@@ -132,63 +95,38 @@ class Console
         if ($lineBreak) {
             echo PHP_EOL;
         }
-        if (static::$progressBar !== null && static::$progressBar->isShowing()) {
-            static::$progressBar->update();
+        if (static::progressBar() !== null && static::progressBar()->isShowing()) {
+            static::progressBar()->update();
         }
     }
 
-    /**
-     * @param string $message
-     * @param Color  $color
-     * @param bool   $lineBreak
-     */
-    public static function printColor(string $message, Color $color, bool $lineBreak = true)
+    public static function printColor(string $message, Color $color, bool $lineBreak = true): void
     {
-        if (static::$progressBar !== null && static::$progressBar->isShowing()) {
-            static::$progressBar->clear();
+        if (static::progressBar() !== null && static::progressBar()->isShowing()) {
+            static::progressBar()->clear();
         }
         static::ensureGenerator();
         static::print(static::$generator->genColor($message, $color), $lineBreak);
-        if (static::$progressBar !== null && static::$progressBar->isShowing()) {
-            static::$progressBar->update();
+        if (static::progressBar() !== null && static::progressBar()->isShowing()) {
+            static::progressBar()->update();
         }
     }
 
-    /**
-     * @param string $prompt
-     *
-     * @return string
-     */
-    public static function readline(string $prompt = "\n> ")
+    public static function readline(string $prompt = "\n> "): string
     {
         echo $prompt;
 
         return \trim(\readline());
     }
 
-    /**
-     * @param string $message
-     * @param string $prompt
-     * @param bool   $lineBreak
-     *
-     * @return string
-     */
-    public static function promptReadline(string $message, string $prompt = "\n> ", bool $lineBreak = true)
+    public static function promptReadline(string $message, string $prompt = "\n> ", bool $lineBreak = true): string
     {
         static::print($message, $lineBreak);
 
         return static::readline($prompt);
     }
 
-    /**
-     * @param string $message
-     * @param array  $options
-     * @param string $prompt
-     * @param bool   $returnValue
-     *
-     * @return mixed|string
-     */
-    public static function optionsReadline(string $message, array $options, string $prompt = "\n> ", bool $returnValue = false)
+    public static function optionsReadline(string $message, array $options, string $prompt = "\n> ", bool $returnValue = false): mixed
     {
         $choice = '';
         while (!\array_key_exists($choice, $options)) {
@@ -202,103 +140,56 @@ class Console
         return $returnValue ? $options[$choice] : $choice;
     }
 
-    /**
-     * @param string $message
-     * @param Color  $color
-     * @param string $prompt
-     * @param bool   $lineBreak
-     *
-     * @return string
-     */
-    public static function promptColorReadlline(string $message, Color $color, string $prompt = "\n> ", bool $lineBreak = true)
+    public static function promptColorReadlline(string $message, Color $color, string $prompt = "\n> ", bool $lineBreak = true): string
     {
         static::printColor($message, $color, $lineBreak);
 
         return static::readline($prompt);
     }
 
-    /**
-     * @param string $message
-     */
-    public static function printSuccess(string $message)
+    public static function printSuccess(string $message): void
     {
         static::printLine($message, (new Color16())->setForegroundColor(Color::GREEN));
     }
 
-    /**
-     * @param string $message
-     * @param bool   $force
-     */
-    public static function printError(string $message, bool $force = false)
+    public static function printError(string $message, bool $force = false): void
     {
         if (static::$errorCount < 5 || $force) {
             static::printLine($message, (new Color16())->setForegroundColor(Color::RED));
         }
     }
 
-    /**
-     * @param string $message
-     */
-    public static function printDebug(string $message)
+    public static function printDebug(string $message): void
     {
         static::printLine($message, (new Color16())->setForegroundColor(Color::BLACK, true));
     }
 
-    /**
-     * @param string $message
-     */
-    public static function printHeader(string $message)
+    public static function printHeader(string $message): void
     {
-        $bar     = str_pad('', \strlen($message) + 4, '=');
+        $bar = str_pad('', \strlen($message) + 4, '=');
         $message = "$bar\n| $message |\n$bar";
         static::printLine($message, (new Color16())->setForegroundColor(Color::YELLOW));
     }
 
-    /**
-     * Prints a 16 color rainbow colored text
-     *
-     * @param string $message
-     * @param bool   $useBackColors
-     * @param array  $flags
-     * @param bool   $lineBreak
-     */
-    public static function printRainbow(string $message, bool $useBackColors = false, array $flags = [], $lineBreak = false)
+    public static function printRainbow(string $message, bool $useBackColors = false, array $flags = [], $lineBreak = false): void
     {
         static::ensureGenerator();
         static::print(static::$generator->genRainbow($message, $useBackColors, $flags), $lineBreak);
     }
 
-    /**
-     * Prints a 256 color rainbow colored text
-     *
-     * @param string $message
-     * @param bool   $useBackColors
-     * @param array  $flags
-     * @param bool   $lineBreak
-     */
-    public static function printRainbow256(string $message, bool $useBackColors = false, array $flags = [], $lineBreak = false)
+    public static function printRainbow256(string $message, bool $useBackColors = false, array $flags = [], $lineBreak = false): void
     {
         static::ensureGenerator();
         static::print(static::$generator->genRainbow256($message, $useBackColors, $flags), $lineBreak);
     }
 
-    /**
-     * @param array      $error_messages
-     * @param array|null $debug_messages
-     * @param array|null $backtrace
-     */
-    public static function dieWithTrace(array $error_messages, array $debug_messages = null, array $backtrace = null)
+    public static function dieWithTrace(array $error_messages, array $debug_messages = null, array $backtrace = null): void
     {
         static::printErrorWithTrace($error_messages, $debug_messages, $backtrace);
         exit(1);
     }
 
-    /**
-     * @param array      $error_messages
-     * @param array|null $debug_messages
-     * @param array|null $backtrace
-     */
-    public static function printErrorWithTrace(array $error_messages, array $debug_messages = null, array $backtrace = null)
+    public static function printErrorWithTrace(array $error_messages, array $debug_messages = null, array $backtrace = null): void
     {
         static::printError(implode(PHP_EOL, $error_messages));
         if (!empty($debug_messages)) {
@@ -327,7 +218,6 @@ class Console
             foreach ($trace['args'] as $arg) {
                 static::printLine("\t\t" . var_export($arg, true));
             }
-
         }
     }
 

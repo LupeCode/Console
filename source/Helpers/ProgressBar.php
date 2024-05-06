@@ -277,15 +277,15 @@ class ProgressBar
         }
         $speed   = round($rate / 1, 2);
         $left    = $this->total - $this->current;
-        $eta     = round($rate * $left, 2);
+        $eta     = (int)round($rate * $left, 2);
         $elapsed = $now - $this->timeStart;
 
         $replaceArray = [
             '$1' => $display,
             '$2' => $this->current,
             '$3' => $this->total,
-            '$4' => sprintf('%02d:%02d:%02d', floor($eta / 3600), floor($eta / 60 % 60), floor($eta % 60)),
-            '$5' => sprintf('%02d:%02d:%02d', floor($elapsed / 3600), floor($elapsed / 60 % 60), floor($elapsed % 60)),
+            '$4' => $this->secondsToTime($eta),
+            '$5' => $this->secondsToTime($elapsed),
             '$6' => $this->text,
             '$7' => $speed,
         ];
@@ -294,6 +294,16 @@ class ProgressBar
         echo $statusText;
 
         return $this;
+    }
+
+    protected function secondsToTime(int $seconds)
+    {
+        $h = floor($seconds / 3600);
+        $seconds %= 3600;
+        $m = floor($seconds / 60);
+        $s = $seconds % 60;
+
+        return sprintf('%02d:%02d:%02d', $h, $m, $s);
     }
 
     /**

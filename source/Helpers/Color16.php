@@ -12,16 +12,13 @@ use LupeCode\Console\Helpers\Controls\ControlSequenceIntroducer as CSI;
 class Color16 implements Color
 {
 
-    protected $foreColor = '39';
-    protected $backColor = '49';
-    protected $flags     = '';
-    protected $foreLight = false;
-    protected $backLight = false;
+    protected string $foreColor = '39';
+    protected string $backColor = '49';
+    protected string $flags     = '';
+    protected bool $foreLight = false;
+    protected bool $backLight = false;
 
-    /**
-     * @return $this
-     */
-    public function reset()
+    public function reset(): static
     {
         $this->foreColor = '39';
         $this->backColor = '49';
@@ -32,29 +29,17 @@ class Color16 implements Color
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getColorCode()
+    public function getColorCode(): string
     {
         return implode(';', [$this->flags, $this->backColor, $this->foreColor]);
     }
 
-    /**
-     * @return string
-     */
-    public function getEscapeSequence()
+    public function getEscapeSequence(): string
     {
         return CSI::SGR($this->getColorCode());
     }
 
-    /**
-     * @param string $color
-     * @param bool   $light
-     *
-     * @return $this
-     */
-    public function setForegroundColor(string $color, bool $light = false)
+    public function setForegroundColor(string $color, bool $light = false): static
     {
         if ($light) {
             $this->foreColor = '9' . $color;
@@ -65,13 +50,7 @@ class Color16 implements Color
         return $this;
     }
 
-    /**
-     * @param string $color
-     * @param bool   $light
-     *
-     * @return $this
-     */
-    public function setBackgroundColor(string $color, bool $light = false)
+    public function setBackgroundColor(string $color, bool $light = false): static
     {
         if ($light) {
             $this->backColor = '10' . $color;
@@ -82,23 +61,14 @@ class Color16 implements Color
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    public function clearFlags()
+    public function clearFlags(): static
     {
         $this->flags = '';
 
         return $this;
     }
 
-    /**
-     * @param string $flag
-     * @param bool   $off
-     *
-     * @return $this
-     */
-    public function setFlag(string $flag, bool $off = false)
+    public function setFlag(string $flag, bool $off = false): static
     {
         if (!empty($this->flags)) {
             $this->flags .= ';';
