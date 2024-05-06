@@ -7,7 +7,7 @@ use LupeCode\Console\Helpers\Controls\ControlSequenceIntroducer as CSI;
 class Generator
 {
 
-    protected function r256(Color256 $color, int $r, int $g, int $b, bool $useBackColors = false, array $flags = [])
+    protected function r256(Color256 $color, int $r, int $g, int $b, bool $useBackColors = false, array $flags = []): string
     {
         $color->setForegroundColorRGB($r, $g, $b);
         if ($useBackColors) {
@@ -20,7 +20,7 @@ class Generator
         return $color->getEscapeSequence();
     }
 
-    public function genRainbow256(string $message, $useBackColors = false, array $flags = [])
+    public function genRainbow256(string $message, $useBackColors = false, array $flags = []): string
     {
         $length   = strlen($message);
         $color    = new Color256();
@@ -30,45 +30,47 @@ class Generator
             $flags = [Color::BOLD];
         }
         while (true) {
-            for ($r = 5, $g = 0, $b = 0; $g < 6; $g++) {
+            $r = 5;
+            $g = 0;
+            $b = 0;
+
+            for (; $g < 6; $g++) {
                 if ($iterator >= $length) {
                     return $output . CSI::SGR();
                 }
                 $output .= $this->r256($color, $r, $g, $b, $useBackColors, $flags) . $message[$iterator++];
             }
-            for ($r = 5, $g = 5, $b = 0; $r >= 0; $r--) {
+            for ($g = 5; $r >= 0; $r--) {
                 if ($iterator >= $length) {
                     return $output . CSI::SGR();
                 }
                 $output .= $this->r256($color, $r, $g, $b, $useBackColors, $flags) . $message[$iterator++];
             }
-            for ($r = 0, $g = 5, $b = 0; $b < 6; $b++) {
+            for ($r = 0; $b < 6; $b++) {
                 if ($iterator >= $length) {
                     return $output . CSI::SGR();
                 }
                 $output .= $this->r256($color, $r, $g, $b, $useBackColors, $flags) . $message[$iterator++];
             }
-            for ($r = 0, $g = 5, $b = 5; $g >= 0; $g--) {
+            for ($b = 5; $g >= 0; $g--) {
                 if ($iterator >= $length) {
                     return $output . CSI::SGR();
                 }
                 $output .= $this->r256($color, $r, $g, $b, $useBackColors, $flags) . $message[$iterator++];
             }
-            for ($r = 0, $g = 0, $b = 5; $r < 6; $r++) {
+            for ($g = 0; $r < 6; $r++) {
                 if ($iterator >= $length) {
                     return $output . CSI::SGR();
                 }
                 $output .= $this->r256($color, $r, $g, $b, $useBackColors, $flags) . $message[$iterator++];
             }
-            for ($r = 5, $g = 0, $b = 5; $b >= 0; $b--) {
+            for ($r = 5; $b >= 0; $b--) {
                 if ($iterator >= $length) {
                     return $output . CSI::SGR();
                 }
                 $output .= $this->r256($color, $r, $g, $b, $useBackColors, $flags) . $message[$iterator++];
             }
         }
-
-        return '';
     }
 
     /**
@@ -78,7 +80,7 @@ class Generator
      *
      * @return string
      */
-    public function genRainbow(string $message, bool $useBackColors = false, array $flags = [])
+    public function genRainbow(string $message, bool $useBackColors = false, array $flags = []): string
     {
         $foreColors = ['1', '3', '2', '6', '4', '5'];
         $backColors = ['6', '4', '5', '1', '3', '2'];
@@ -109,7 +111,7 @@ class Generator
      *
      * @return string
      */
-    public function genColor(string $message, Color $color)
+    public function genColor(string $message, Color $color): string
     {
         return $color->getEscapeSequence() . $message . CSI::SGR();
     }

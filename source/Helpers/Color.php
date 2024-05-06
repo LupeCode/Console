@@ -9,25 +9,25 @@ namespace LupeCode\Console\Helpers;
  */
 interface Color
 {
-    const BLACK   = '0';
-    const RED     = '1';
-    const GREEN   = '2';
-    const YELLOW  = '3';
-    const BLUE    = '4';
-    const MAGENTA = '5';
-    const CYAN    = '6';
-    const GRAY    = '7';
-    const DEFAULT = '9';
+    public const BLACK   = '0';
+    public const RED     = '1';
+    public const GREEN   = '2';
+    public const YELLOW  = '3';
+    public const BLUE    = '4';
+    public const MAGENTA = '5';
+    public const CYAN    = '6';
+    public const GRAY    = '7';
+    public const DEFAULT = '9';
 
-    const RESET      = '0';
-    const BOLD       = '1';
-    const DIM        = '2';
-    const ITALIC     = '3';
-    const UNDERLINE  = '4';
-    const BLINK      = '5';
-    const BLINK_FAST = '6';
-    const INVERT     = '7';
-    const HIDDEN     = '8';
+    public const RESET      = '0';
+    public const BOLD       = '1';
+    public const DIM        = '2';
+    public const ITALIC     = '3';
+    public const UNDERLINE  = '4';
+    public const BLINK      = '5';
+    public const BLINK_FAST = '6';
+    public const INVERT     = '7';
+    public const HIDDEN     = '8';
 
     public function reset();
 
